@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet test *)",
+      "Bash(dotnet run *)",
+      "Bash(dotnet build *)",
+      "Bash(curl *localhost*)",
+      "Bash(ASPNETCORE_ENVIRONMENT=Development dotnet run --launch-profile http --no-build)",
+      "mcp__playwright__*",
+      "mcp__context7__*",
+      "Bash(*grep*)",
+      "WebSearch",
+      "Bash(*tasklist *)",
+      "Bash(echo *)",
+      "Bash(tasklist)",
+      "Bash(cd AiReadyMudBlazorApp*)",
+      "Bash(bash .claude/scripts/restart-dev.sh)",
+      "Bash(sleep *)",
+      "Bash(tail * .claude/app-logs/server.log)"
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+root="${1:-"$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"}"
+
+echo "Scanning for .csproj files under $root"
+
+mapfile -t projects < <(find "$root" -type f -name '*.csproj' \
+    -not -path '*/bin/*' -not -path '*/obj/*')
+
+if [[ ${#projects[@]} -eq 0 ]]; then
+    echo "No .csproj files found." >&2
+    exit 0
+fi
+
+failed=()
+
+for project in "${projects[@]}"; do
+    echo ""
+    echo "=== Updating NuGet packages for $project... ==="
+
+    mapfile -t packages < <(
+        sed -n 's/.*<PackageReference[[:space:]]\+Include="\([^"]*\)".*/\1/p' "$project" \
+            | awk '!seen[$0]++'
+    )
+
+    if [[ ${#packages[@]} -eq 0 ]]; then
+        echo "  (no PackageReference entries)"
+        continue
+    fi
+
+    for name in "${packages[@]}"; do
+        echo "  -> dotnet add package $name"
+        if ! dotnet add "$project" package "$name"; then
+            echo "WARN: Failed to update $name in $(basename "$project")" >&2
+            failed+=("$(basename "$project"): $name")
+        fi
+    done
+done
+
+echo ""
+if [[ ${#failed[@]} -gt 0 ]]; then
+    echo "Completed with failures:" >&2
+    for entry in "${failed[@]}"; do
+        echo "  $entry" >&2
+    done
+    exit 1
+fi
+
+echo "All NuGet packages updated to latest stable versions."

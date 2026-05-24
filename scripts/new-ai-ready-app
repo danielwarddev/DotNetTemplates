@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+command_name="${AI_READY_COMMAND_NAME:-"$(basename "$0")"}"
+default_template="${AI_READY_TEMPLATE:-}"
+
+usage() {
+    if [[ -n "$default_template" ]]; then
+        echo "Usage: $command_name -n <Name> [-o <OutputDirectory>] [--template <TemplateShortName>]" >&2
+    else
+        echo "Usage: $command_name -t <TemplateShortName> -n <Name> [-o <OutputDirectory>]" >&2
+    fi
+
+    exit 1
+}
+
+require_value() {
+    if [[ $# -lt 2 || -z "${2:-}" ]]; then
+        echo "Error: $1 requires a value." >&2
+        usage
+    fi
+}
+
+template="$default_template"
+name=""
+output_directory="$(pwd)"
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -t|--template)
+            require_value "$@"
+            template="$2"
+            shift 2
+            ;;
+        -n|--name)
+            require_value "$@"
+            name="$2"
+            shift 2
+            ;;
+        -o|--output)
+            require_value "$@"
+            output_directory="$2"
+            shift 2
+            ;;
+        -h|--help)
+            usage
+            ;;
+        *)
+            echo "Unknown argument: $1" >&2
+            usage
+            ;;
+    esac
+done
+
+if [[ -z "$template" ]]; then
+    echo "Error: -t <TemplateShortName> is required." >&2
+    usage
+fi
+
+if [[ -z "$name" ]]; then
+    echo "Error: -n <Name> is required." >&2
+    usage
+fi
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+project_path="$output_directory/$name"
+
+echo "Creating new project '$name' from template '$template'..."
+echo "  Output: $project_path"
+
+dotnet new "$template" -n "$name" -o "$project_path"
+
+echo ""
+echo "Updating NuGet packages in generated project..."
+"$script_dir/update-packages" "$project_path"
+
+echo ""
+echo "Project '$name' is ready at $project_path"
+
