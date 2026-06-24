@@ -4,7 +4,7 @@ My personal `dotnet new` templates with the packages, project layout, and setup 
 
 For the most part, they are completely unrelated to AI and can be used separately. I only them "AI-ready" for 2 reasons:
 
-1. The templates include a premade `CLAUDE.md` and `.claude` folder with project instructions, skills, and helper scripts I like to use.
+1. The templates include a premade `AGENTS.md` (with `CLAUDE.md` re-exporting it via `@AGENTS.md`) and `.claude` folder with project instructions, skills, and helper scripts I like to use.
 2. The `scripts` folder provides a more reliable way for AI to create projects for me. I find that without them, what AI creates for new projects is a bit of a gamble (old .NET versions, old Nuget package versions, different patterns, etc.).
 3. Bonus reason - it sounds cool.
 
@@ -40,7 +40,7 @@ All scripts also accept `-o` / `--output` to choose the parent output directory.
 
 ### Adding to an existing solution
 
-All scripts accept `--skip-solution`. This omits the solution-level scaffolding (the `.slnx` solution, `Directory.Build.props`, `CLAUDE.md`, and `.claude/`) and emits only the two project folders, so you can drop them into a solution you already have:
+All scripts accept `--skip-solution`. This omits the solution-level scaffolding (the `.slnx` solution, `Directory.Build.props`, `AGENTS.md`, `CLAUDE.md`, and `.claude/`) and emits only the two project folders, so you can drop them into a solution you already have:
 
 ```bash
 new-ai-ready-console-app -n MyConsoleApp --skip-solution

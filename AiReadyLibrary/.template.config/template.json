@@ -55,6 +55,7 @@
           "exclude": [
             "*.slnx",
             "Directory.Build.props",
+            "AGENTS.md",
             "CLAUDE.md",
             ".claude/**"
           ]
