@@ -13,6 +13,7 @@ For the most part, they are completely unrelated to AI and can be used separatel
 | Template | Short name | What it is | Script |
 | --- | --- | --- | --- |
 | AI-Ready .NET Console App | `ai-ready-console` | Console app template with a sibling unit-test project and shared AI/project instructions. | `scripts\new-ai-ready-console-app` |
+| AI-Ready .NET Library | `ai-ready-library` | Class-library template with a sibling unit-test project and shared AI/project instructions. | `scripts\new-ai-ready-library` |
 | AI-Ready MudBlazor App | `ai-ready-mudblazor` | Blazor/MudBlazor app template with a sibling unit-test project, shared AI/project instructions, and Blazor-specific guidance. | `scripts\new-ai-ready-mudblazor-app` |
 
 ## How to use
@@ -21,6 +22,7 @@ Install the templates you want with `dotnet new install`:
 
 ```powershell
 dotnet new install .\AiReadyConsoleApp
+dotnet new install .\AiReadyLibrary
 dotnet new install .\AiReadyMudBlazorApp
 ```
 
@@ -30,14 +32,15 @@ You can then create projects with the wrapper scripts:
 
 ```bash
 new-ai-ready-console-app -n MyConsoleApp
+new-ai-ready-library -n MyLibrary
 new-ai-ready-mudblazor-app -n MyBlazorApp
 ```
 
-Both scripts also accept `-o` / `--output` to choose the parent output directory. You probably don't need to do this, since by default it creates an output directory for you with the name of the app.
+All scripts also accept `-o` / `--output` to choose the parent output directory. You probably don't need to do this, since by default it creates an output directory for you with the name of the app.
 
 ### Adding to an existing solution
 
-Both scripts accept `--skip-solution`. This omits the solution-level scaffolding (the `.slnx` solution, `Directory.Build.props`, `CLAUDE.md`, and `.claude/`) and emits only the two project folders, so you can drop them into a solution you already have:
+All scripts accept `--skip-solution`. This omits the solution-level scaffolding (the `.slnx` solution, `Directory.Build.props`, `CLAUDE.md`, and `.claude/`) and emits only the two project folders, so you can drop them into a solution you already have:
 
 ```bash
 new-ai-ready-console-app -n MyConsoleApp --skip-solution
