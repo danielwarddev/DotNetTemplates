@@ -30,6 +30,12 @@
       "datatype": "bool",
       "defaultValue": "false",
       "description": "If set, skips the automatic dotnet restore on project creation."
+    },
+    "SkipSolution": {
+      "type": "parameter",
+      "datatype": "bool",
+      "defaultValue": "false",
+      "description": "If set, omits solution-level scaffolding (the .slnx solution, Directory.Build.props, and AI instruction files) so the projects can be added to an existing solution."
     }
   },
   "sources": [
@@ -42,6 +48,15 @@
             "**/.vs/**",
             "**/.idea/**",
             "**/*.user"
+          ]
+        },
+        {
+          "condition": "(SkipSolution)",
+          "exclude": [
+            "*.slnx",
+            "Directory.Build.props",
+            "CLAUDE.md",
+            ".claude/**"
           ]
         }
       ]

@@ -35,6 +35,17 @@ new-ai-ready-mudblazor-app -n MyBlazorApp
 
 Both scripts also accept `-o` / `--output` to choose the parent output directory. You probably don't need to do this, since by default it creates an output directory for you with the name of the app.
 
+### Adding to an existing solution
+
+Both scripts accept `--skip-solution`. This omits the solution-level scaffolding (the `.slnx` solution, `Directory.Build.props`, `CLAUDE.md`, and `.claude/`) and emits only the two project folders, so you can drop them into a solution you already have:
+
+```bash
+new-ai-ready-console-app -n MyConsoleApp --skip-solution
+dotnet sln path/to/Existing.slnx add \
+    MyConsoleApp/MyConsoleApp/MyConsoleApp.csproj \
+    MyConsoleApp/MyConsoleApp.UnitTests/MyConsoleApp.UnitTests.csproj
+```
+
 ## Info on the scripts
 
 `scripts\new-ai-ready-app` is the internal base script behind the template-specific wrappers. It's not intended to be run manually; use the wrapper scripts (eg `new-ai-ready-console-app` or `new-ai-ready-mudblazor-app`) instead.

@@ -6,9 +6,9 @@ default_template="${AI_READY_TEMPLATE:-}"
 
 usage() {
     if [[ -n "$default_template" ]]; then
-        echo "Usage: $command_name -n <Name> [-o <OutputDirectory>] [--template <TemplateShortName>]" >&2
+        echo "Usage: $command_name -n <Name> [-o <OutputDirectory>] [--skip-solution] [--template <TemplateShortName>]" >&2
     else
-        echo "Usage: $command_name -t <TemplateShortName> -n <Name> [-o <OutputDirectory>]" >&2
+        echo "Usage: $command_name -t <TemplateShortName> -n <Name> [-o <OutputDirectory>] [--skip-solution]" >&2
     fi
 
     exit 1
@@ -24,6 +24,7 @@ require_value() {
 template="$default_template"
 name=""
 output_directory="$(pwd)"
+skip_solution=false
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -41,6 +42,10 @@ while [[ $# -gt 0 ]]; do
             require_value "$@"
             output_directory="$2"
             shift 2
+            ;;
+        --skip-solution)
+            skip_solution=true
+            shift
             ;;
         -h|--help)
             usage
@@ -68,7 +73,12 @@ project_path="$output_directory/$name"
 echo "Creating new project '$name' from template '$template'..."
 echo "  Output: $project_path"
 
-dotnet new "$template" -n "$name" -o "$project_path"
+dotnet_new_args=("$template" -n "$name" -o "$project_path")
+if [[ "$skip_solution" == true ]]; then
+    dotnet_new_args+=(--SkipSolution)
+fi
+
+dotnet new "${dotnet_new_args[@]}"
 
 echo ""
 echo "Updating NuGet packages in generated project..."
